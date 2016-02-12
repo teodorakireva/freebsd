@@ -1,4 +1,6 @@
 # $FreeBSD$
 
+arm/allwinner/a20/a20_cpu_cfg.c 	standard
+arm/allwinner/timer.c			standard
 arm/allwinner/a20/a20_mp.c		optional	smp
 arm/allwinner/a20/a20_if_dwc.c		optional	dwc
