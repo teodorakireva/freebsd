@@ -56,7 +56,7 @@
 			compatible = "allwinner,sun4i-sramc";
 			#address-cells = <1>;
 			#size-cells = <1>;
-			reg = < 0x01c00000 0x1000 >;
+			reg = < 0x00010000 0x1000 >;
 		};
 
 		cpu-cfg@01f01c00 {
@@ -67,15 +67,23 @@
 		};
 
 		ccm@01c20000 {
-			compatible = "allwinner,sun4i-ccm";
+			compatible = "allwinner,sun8i-ccm";
 			#address-cells = <1>;
 			#size-cells = <1>;
 			reg = < 0x01c20000 0x400 >;
 		};
 
+		system@01c00000 {
+			compatible = "allwinner,sun8i-system";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = < 0x01c00000 0x100 >;
+			status = "okay";
+		};
+
 		pio: gpio@01c20800 {
 			#gpio-cells = <3>;
-			compatible = "allwinner,sun4i-gpio";
+			compatible = "allwinner,sun8i-gpio";
 			gpio-controller;
 			reg =<  0x01c20800 0x400 >;
 			interrupts = < 28 >;
@@ -83,11 +91,11 @@
 		};
 
 		mmc0: mmc@01c0f000 {
-			compatible = "allwinner,sun4i-a10-mmc";
+			compatible = "allwinner,sun8i-h3-mmc";
 			reg = <0x01c0f000 0x1000>;
-			interrupts = <32>;
+			interrupts = <92>;
 			interrupt-parent = <&GIC>;
-			status = "disabled";
+			status = "okay";
 		};
 
 		timer@01c20c00 {
@@ -102,26 +110,25 @@
 			compatible = "snps,dw-apb-uart";
 			reg = <0x01c28000 0x400>;
 			reg-shift = <2>;
-			interrupts = <1>;
+			interrupts = <32>;
 			interrupt-parent = <&GIC>;
 			current-speed = <115200>;
 			clock-frequency = < 24000000 >;
 		};
+	
+		watchdog@01c20ca0 {
+			compatible = "allwinner,sun8i-wdt";
+			status = "okay"; 
+			reg = <0x01c20ca0 0x20>;
+		};
+
+		emac@01c30000 {
+			compatible = "allwinner,sun8i-emac";
+			reg = <0x01c30000 0x1000>;
+			interrupts = <114>;
+			interrupt-parent = <&GIC>;
+			status = "okay";
+		};
 
 	};
 };
-/*
-		timer@01c20c00 {
-			compatible = "allwinner,sun8i-timer";
-			reg = <0x01c20c00 0xa0>;
-			interrupts = < 22 >;
-			interrupt-parent = <&GIC>;
-			clock-frequency = < 24000000 >;
-		};
-*/
-/*
-		watchdog@01c20c90 {
-			compatible = "allwinner,sun4i-wdt";
-			reg = <0x01c20c90 0x10>;
-		};
-*/

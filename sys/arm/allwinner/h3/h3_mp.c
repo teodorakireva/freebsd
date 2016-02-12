@@ -41,21 +41,26 @@ __FBSDID("$FreeBSD$");
 #include <machine/fdt.h>
 #include <machine/intr.h>
 
-#define	CPUCFG_BASE		0x01c25c00
+#define	CPUCFG_BASE		0x01f01c00
 #define	CPUCFG_SIZE		0x400
 
+#define CPUS_RST_CTL		0x00
 #define	CPU0_RST_CTL		0x40
 #define	CPU0_CTL		0x44
 #define	CPU0_STATUS		0x48
 #define	CPU1_RST_CTL		0x80
 #define	CPU1_CTL		0x84
 #define	CPU1_STATUS		0x88
+#define	CPU2_RST_CTL		0xc0
+#define	CPU2_CTL		0xc4
+#define	CPU2_STATUS		0xc8
+#define	CPU3_RST_CTL		0x100
+#define	CPU3_CTL		0x104
+#define	CPU3_STATUS		0x108
+#define CPU_SYS_RST		0x140
+#define CPU_CLK_GATING		0x144
 #define	CPUCFG_GENCTL		0x184
-#define	CPUCFG_P_REG0		0x1a4
-#define	CPU1_PWR_CLAMP		0x1b0
-#define	CPU1_PWROFF_REG		0x1b4
-#define	CPUCFG_DBGCTL0		0x1e0
-#define	CPUCFG_DBGCTL1		0x1e4
+#define SUP_STAN_FLAG		0x1A0
 
 void
 platform_mp_init_secondary(void)
@@ -104,52 +109,31 @@ platform_mp_start_ap(void)
 	cpu_idcache_wbinv_all();
 	cpu_l2cache_wbinv_all();
 
-	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPUCFG_P_REG0,
-	    pmap_kextract((vm_offset_t)mpentry));
-
 	/*
 	 * Assert nCOREPORESET low and set L1RSTDISABLE low.
 	 * Ensure DBGPWRDUP is set to LOW to prevent any external
 	 * debug access to the processor.
 	 */
 	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPU1_RST_CTL, 0);
+	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPU2_RST_CTL, 0);
+	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPU3_RST_CTL, 0);
 
 	/* Set L1RSTDISABLE low */
 	val = bus_space_read_4(fdtbus_bs_tag, cpucfg, CPUCFG_GENCTL);
-	val &= ~(1 << 1);
+	val &= ~(7 << 1);
 	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPUCFG_GENCTL, val);
 
-	/* Set DBGPWRDUP low */
-	val = bus_space_read_4(fdtbus_bs_tag, cpucfg, CPUCFG_DBGCTL1);
-	val &= ~(1 << 1);
-	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPUCFG_DBGCTL1, val);
-
-	/* Release power clamp */
-	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPU1_PWR_CLAMP, 0xff);
-	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPU1_PWR_CLAMP, 0x7f);
-	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPU1_PWR_CLAMP, 0x3f);
-	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPU1_PWR_CLAMP, 0x1f);
-	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPU1_PWR_CLAMP, 0x0f);
-	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPU1_PWR_CLAMP, 0x07);
-	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPU1_PWR_CLAMP, 0x03);
-	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPU1_PWR_CLAMP, 0x01);
-	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPU1_PWR_CLAMP, 0x00);
-	DELAY(10000);
+	val = bus_space_read_4(fdtbus_bs_tag, cpucfg, CPU_CLK_GATING);
+	val &= ~(7 << 1);
+	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPU_CLK_GATING, val);
 
 	/* Clear power-off gating */
-	val = bus_space_read_4(fdtbus_bs_tag, cpucfg, CPU1_PWROFF_REG);
-	val &= ~(1 << 0);
-	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPU1_PWROFF_REG, val);
-	DELAY(1000);
 
 	/* De-assert cpu core reset */
 	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPU1_RST_CTL, 3);
-
-	/* Assert DBGPWRDUP signal */
-	val = bus_space_read_4(fdtbus_bs_tag, cpucfg, CPUCFG_DBGCTL1);
-	val |= (1 << 1);
-	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPUCFG_DBGCTL1, val);
-
+	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPU2_RST_CTL, 3);
+	bus_space_write_4(fdtbus_bs_tag, cpucfg, CPU3_RST_CTL, 3);
+	
 	armv7_sev();
 	bus_space_unmap(fdtbus_bs_tag, cpucfg, CPUCFG_SIZE);
 }

@@ -177,7 +177,7 @@ h3_timer_attach(device_t dev)
 
 	/* Set desired frequency in event timer and timecounter */
 	sc->et.et_frequency = sc->timer0_freq;
-	sc->et.et_name = "a10_timer Eventtimer";
+	sc->et.et_name = "h3_timer Eventtimer";
 	sc->et.et_flags = ET_FLAGS_ONESHOT | ET_FLAGS_PERIODIC;
 	sc->et.et_quality = 1000;
 	sc->et.et_min_period = (0x00000005LLU << 32) / sc->et.et_frequency;
