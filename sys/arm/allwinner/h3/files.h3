@@ -12,3 +12,4 @@ arm/allwinner/h3/h3_cpu_cfg.c 		standard
 arm/allwinner/h3/h3_timer.c		standard
 arm/allwinner/h3/h3_mp.c		optional	smp
 arm/allwinner/h3/h3_system.c		standard
+arm/allwinner/h3/h3_pwm.c		standard

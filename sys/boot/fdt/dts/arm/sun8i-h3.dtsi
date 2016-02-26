@@ -130,5 +130,10 @@
 			status = "okay";
 		};
 
+		pwm@01c21400 {
+			compatible = "allwinner,sun8i-pwm";
+			reg = <0x01c21400 0x400>;
+			status = "okay";
+		};
 	};
 };
