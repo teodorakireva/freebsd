@@ -1,5 +1,7 @@
 /*-
  * Copyright (c) 2013 Alexander Fedorov
+ * Copyright (c) 2016 Teodora Kireva <teodora_kireva@smartcom.bg>
+ * Copyright (c) 2016 Tsvetko Tsvetkov <tsvetko_tsvetkov@smartcom.bg>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -179,7 +181,7 @@ h3_mmc_attach(device_t dev)
 	tree = SYSCTL_CHILDREN(device_get_sysctl_tree(dev));
 	SYSCTL_ADD_INT(ctx, tree, OID_AUTO, "req_timeout", CTLFLAG_RW,
 	    &sc->h3_timeout, 0, "Request timeout in seconds");
-	mtx_init(&sc->h3_mtx, device_get_nameunit(sc->h3_dev), "a10_mmc",
+	mtx_init(&sc->h3_mtx, device_get_nameunit(sc->h3_dev), "h3_mmc",
 	    MTX_DEF);
 	callout_init_mtx(&sc->h3_timeoutc, &sc->h3_mtx, 0);
 

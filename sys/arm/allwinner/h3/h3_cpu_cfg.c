@@ -1,5 +1,7 @@
 /*-
  * Copyright (c) 2013 Ganbold Tsagaankhuu <ganbold@freebsd.org>
+ * Copyright (c) 2016 Teodora Kireva <teodora_kireva@smartcom.bg>
+ * Copyright (c) 2016 Tsvetko Tsvetkov <tsvetko_tsvetkov@smartcom.bg>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,7 +26,7 @@
  * SUCH DAMAGE.
  */
 
-/* CPU configuration module for Allwinner A20 */
+/* CPU configuration module for Allwinner H3 */
 
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD$");

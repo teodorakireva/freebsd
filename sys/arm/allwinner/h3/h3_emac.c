@@ -82,7 +82,6 @@ __FBSDID("$FreeBSD$");
 #include "gpio_if.h"
 
 #include "h3_clk.h"
-#include "h3_sramc.h"
 #include "h3_gpio.h"
 #include "h3_system.h"
 

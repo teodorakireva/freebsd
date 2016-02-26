@@ -1,5 +1,7 @@
 /*-
  * Copyright (c) 2013 Alexander Fedorov <alexander.fedorov@rtlservice.com>
+ * Copyright (c) 2016 Teodora Kireva <teodora_kireva@smartcom.bg>
+ * Copyright (c) 2016 Tsvetko Tsvetkov <tsvetko_tsvetkov@smartcom.bg>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without

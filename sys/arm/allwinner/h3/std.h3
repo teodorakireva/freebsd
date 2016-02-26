@@ -1,4 +1,4 @@
-# Allwinner A20 common options
+# Allwinner H3 common options
 #$FreeBSD$
 
 cpu		CPU_CORTEXA

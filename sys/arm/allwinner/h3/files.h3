@@ -1,16 +1,14 @@
 # $FreeBSD$
 
 kern/kern_clocksource.c			standard
-arm/allwinner/h3/h3_clk.c			standard
+arm/allwinner/h3/h3_clk.c		standard
 arm/allwinner/h3/h3_common.c		standard
 arm/allwinner/h3/h3_gpio.c		optional	gpio
 arm/allwinner/h3/h3_mmc.c		optional	mmc
-arm/allwinner/h3/h3_sramc.c		standard
 arm/allwinner/h3/h3_wdog.c		standard
 arm/allwinner/allwinner_machdep.c	standard
 arm/allwinner/h3/h3_emac.c		optional	emac
 arm/allwinner/h3/h3_cpu_cfg.c 		standard
 arm/allwinner/h3/h3_timer.c		standard
 arm/allwinner/h3/h3_mp.c		optional	smp
-arm/allwinner/h3/h3_if_dwc.c		optional	dwc
 arm/allwinner/h3/h3_system.c		standard
