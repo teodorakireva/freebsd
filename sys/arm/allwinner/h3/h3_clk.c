@@ -49,7 +49,8 @@ struct h3_ccm_softc {
 	struct resource		*res;
 	bus_space_tag_t		bst;
 	bus_space_handle_t	bsh;
-	int			pll6_enabled;
+	int			p0_en;
+	int			p1_en;
 	uint8_t			type;
 };
 
@@ -122,7 +123,7 @@ h3_clk_emac_activate(void)
 {
 	struct h3_ccm_softc *sc = h3_ccm_sc;
 	uint32_t reg_value;
-	
+
 	if (sc == NULL)
 		return (ENXIO);
 
@@ -146,9 +147,9 @@ h3_clk_emac_activate(void)
 	ccm_write_4(sc, CCM_BUS_CLK_GATING4, reg_value);
 
 	/* Gating AHB clock for EMAC */
-	reg_value = ccm_read_4(sc, CCM_AHB_GATING0);
-	reg_value |= CCM_AHB_GATING_EMAC;
-	ccm_write_4(sc, CCM_AHB_GATING0, reg_value);
+	reg_value = ccm_read_4(sc, CCM_BUS_CLK_GATING0);
+	reg_value |= CCM_EMAC_GATING;
+	ccm_write_4(sc, CCM_BUS_CLK_GATING0, reg_value);
 
 	return (0);
 }
@@ -160,7 +161,7 @@ h3_clk_periph0_enable(void)
 	uint32_t reg_value;
 
 	sc = h3_ccm_sc;
-	if (sc->pll6_enabled)
+	if (sc->p0_en)
 		return;
 	reg_value = ccm_read_4(sc, CCM_PERIPH0_CFG);
 	reg_value &= ~(CCM_PLL_CFG_FACTOR_K | CCM_PLL_CFG_FACTOR_M |
@@ -168,7 +169,7 @@ h3_clk_periph0_enable(void)
 	reg_value |= (25 << CCM_PLL_CFG_FACTOR_N_SHIFT);
 	reg_value |= CCM_PLL_CFG_ENABLE;
 	ccm_write_4(sc, CCM_PERIPH0_CFG, reg_value);
-	sc->pll6_enabled = 1;
+	sc->p0_en = 1;
 }
 
 static unsigned int
@@ -199,9 +200,9 @@ h3_clk_mmc_activate(int devid)
 	h3_clk_periph0_enable();
 
 	/* Gating AHB clock for SD/MMC */
-	reg_value = ccm_read_4(sc, CCM_AHB_GATING0);
-	reg_value |= CCM_AHB_GATING_SDMMC0 << devid;
-	ccm_write_4(sc, CCM_AHB_GATING0, reg_value);
+	reg_value = ccm_read_4(sc, CCM_BUS_CLK_GATING0);
+	reg_value |= CCM_MMC0_GATING << devid;
+	ccm_write_4(sc, CCM_BUS_CLK_GATING0, reg_value);
 
 	return (0);
 }
@@ -255,4 +256,3 @@ h3_clk_mmc_cfg(int devid, int freq)
 
 	return (0);
 }
-
